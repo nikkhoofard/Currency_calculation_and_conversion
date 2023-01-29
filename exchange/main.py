@@ -3,6 +3,7 @@ import smtplib
 import json
 from mail2 import send_mail2
 from config import url ,rules
+from send_notification import send_sms
 
 
 def get_rates():
@@ -22,10 +23,26 @@ def send_mail(timestamp, rates):
         rates = tmp
 
     text = json.dumps(rates)
-    
+
     send_mail2(subject,text)
 
-    
+def check_notify_rules(rates):
+    preferred = rules['notification']['preferred']
+    msg = ''
+    for exe in preferred:
+        if rates[exe] <= preferred[exe]['min']:
+            msg += f'{exe} reached min :{rates[exe]}'
+        if rates[exe] >= preferred[exe]['max']:
+            msg += f'{exe} reached max :{rates[exe]}'
+
+    print(msg)
+    return msg
+
+
+def send_notification(msg):
+    send_sms(msg)
+
+  
 
 
 
@@ -44,8 +61,9 @@ if __name__ == "__main__":
     if rules['email']['enable']:
         # send_mail2(res['timestamp'], res['rates'])
         send_mail(res['timestamp'], res['rates'])
-    # if rules['notification']['enable']:
-    #     notification_msg = check_notify_rules(res['rates'])
-    #     if notification_msg:
-    #         send_notification(notification_msg)
+
+    if rules['notification']['enable']:
+        notification_msg = check_notify_rules(res['rates'])
+        if notification_msg:
+            send_notification(notification_msg)
 

@@ -25,7 +25,7 @@ rules = {
     },
     'notification': {
         'enable': True,
-        'receiver': '',
+        'receiver': '09910904518',
         'preferred': {
             'BTC': {'min': 0.000101, 'max': 0.000110},
             'IRR': {'min': 45000, 'max': 50000},
