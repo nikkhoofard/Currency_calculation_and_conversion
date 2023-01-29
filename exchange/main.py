@@ -10,9 +10,14 @@ def get_rate():
 
     return None
 
+def archive(filename,rates):
+    with open(f'archive/{filename}',"w") as f:
+        f.write(json.dumps(rates))
+        f.close()
+
 
 if __name__ == "__main__":
     response = get_rate()
-    print(response['rates'])
+    archive(response['timestamp'],response['rates'])
 
 
